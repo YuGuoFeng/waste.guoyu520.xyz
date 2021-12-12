@@ -13,7 +13,7 @@ use think\Request;
 use think\Response;
 use think\Route;
 use think\Validate;
-
+use App\Myexception;
 /**
  * API控制器基类
  */
@@ -64,6 +64,57 @@ class Api
      */
     protected $responseType = 'json';
 
+
+    public function json($msg= '',$code = 0,$data=[]){
+        header('Content-Type:application/json');
+        http_response_code(200);//去掉响应码，因为01这种是非标准的响应码 会造成报错
+        exit(json_encode([
+            'code' => (string) $code,
+            'msg' => $msg,
+            'data' => $data
+        ], 256));
+    }
+
+        /**
+     * 字段验证
+     * [Param description]
+     * @Author   郭宇
+     * @DateTime 2020-07-07T18:25:20+0800
+     * @param    array                    $param [description]
+     * @param    string                   $vrev  [description]
+     * @param    array                    $zh_cn [description]
+     */
+    protected function ParamArr($array=[],$PostGet=[])
+    {   
+        /* if (empty($param)) {
+             throw new  Myexception("参数为空");
+        }
+        $str = "";
+        foreach ($zh_cn as $v => $val) {
+            $v = htmlspecialchars_decode(trim($v));
+            if (empty($param[$v])) {
+                    $str .= $val . ', '; 
+                
+            }   
+        }
+        if (!empty($str)) {
+            $str = substr($str, 0, -2);
+            throw new  Myexception(" < " . $str . " > 参数不得为空");
+        } */
+        $data    = [];
+        if(is_array($array) && !empty($array)){
+            foreach ($array as $k=>$v) {
+                $data[$k] =  $PostGet[$v[0]]??$v[1];
+                if(!empty($v[2])){
+                    if(!isset($data[$k])){
+                        throw new  Myexception($v[3]);
+                    }
+                }
+            }
+        }
+        return $data;
+      
+    }
     /**
      * 构造方法
      * @access public

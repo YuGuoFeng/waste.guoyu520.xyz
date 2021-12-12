@@ -1,5 +1,5 @@
 <?php
-
+use think\Route;
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -10,16 +10,23 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-return [
-    //别名配置,别名只能是映射到控制器且访问时必须加上请求的方法
-    '__alias__'   => [
-    ],
-    //变量规则
-    '__pattern__' => [
-    ],
-//        域名绑定到模块
-//        '__domain__'  => [
-//            'admin' => 'admin',
-//            'api'   => 'api',
-//        ],
-];
+Route::group('v1',function(){
+
+    Route::post('upload','api/common/upload');
+    
+    // 登陆
+    Route::post('login','wechat/user/login');
+    // 申请成为管理员
+    Route::post('administrator/applyUser','wechat/administrator/applyUser');
+    // 地址管理
+    Route::resource('address','wechat/Address');
+
+    // 根据用户地址返回站点信息
+    Route::get('order/recyclingSite/:address_id','wechat/order/recyclingSite');
+    // 提交订单
+    Route::post('order/save','wechat/order/save');
+
+    // 管理员
+    // 物品管理
+    Route::resource('goods','wechat/goods');
+});
