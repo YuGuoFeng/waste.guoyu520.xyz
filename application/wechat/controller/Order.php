@@ -91,6 +91,84 @@ class Order extends Api
             return $this->json($e->getMessage(),400,['getFile'=>$e->getFile(),'getLine'=>$e->getLine()]);
         }
     }
+    // 订单列表
+    public function list(Request $request){
+        try{
+            $size = $request->get('size')??10;
+            $page = $request->get('page')??10;
+            // ongoing:进行中 complete:完成 cancel:取消
+            $type = $request->get('type')??'ongoing';
+            $user_id = $this->auth->id;
+            // identity (0:普通用户，1:管理员)
+            $identity = $this->auth->identity;
+
+            $query = (new om)->order('id','desc');
+            
+            if($identity == 1){
+                $query->where('administrator_id',$user_id);
+            }else{
+                $query->where('user_id',$user_id);
+            }
+            if($type == 'ongoing'){
+                $query->where('status','in',[0,1]);
+            }elseif($type == 'complete'){
+                $query->where('status',2);
+            }elseif($type == 'cancel'){
+                $query->where('status',3);
+            }
+            $data = $query->page($page,$size)->select();
+            return $this->json('ok',200,$data);
+        }catch(Myexception $e){
+            return $this->json($e->getMsg(),400,$e);
+        }catch(\Exception $e){
+            return $this->json($e->getMessage(),400,$e);
+        }
+    }
+
+    public function info(Request $request,$id){
+        try{
+            $data = (new om)->where('id',$id)->find();
+            if(empty($data)){
+                throw new Myexception('数据不存在');
+            }
+            return $this->json('ok',200,$data);
+        }catch(Myexception $e){
+            return $this->json($e->getMsg(),400,$e);
+        }catch(\Exception $e){
+            return $this->json($e->getMessage(),400,$e);
+        }
+    }
+    // 修改订单状态
+    public function editStatus(Request $request,$id){
+        try{
+
+            $p = [
+                'status'         => ['status',null,true,'订单状态'],
+            ];
+            $data = $this->ParamArr($p,$request->param());
+            $status = $data['status'];
+            $row = (new om)->where('id',$id)->find();
+            if(empty($row)){
+                throw new Myexception('数据不存在');
+            }
+            $time = time();
+            if($status == 1){
+                $row->accepttime = $time;  
+            }elseif($status == 2){
+                $row->completetime = $time;
+            }elseif($status == 2){
+                $row->canceltime = $time;
+            }
+            $row->status = $status;
+            $row->save();
+
+            return $this->json('ok',200,$data);
+        }catch(Myexception $e){
+            return $this->json($e->getMsg(),400,$e);
+        }catch(\Exception $e){
+            return $this->json($e->getMessage(),400,$e);
+        }
+    }
 
     /* ---------------------------------------- */
 

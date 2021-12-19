@@ -5,13 +5,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'user/user_apply/index' + location.search,
-                    add_url: 'user/user_apply/add',
-                    edit_url: 'user/user_apply/edit',
-                    del_url: 'user/user_apply/del',
-                    multi_url: 'user/user_apply/multi',
-                    import_url: 'user/user_apply/import',
-                    table: 'user_apply',
+                    index_url: 'cwmap/maplocation/index',
+                    add_url: 'cwmap/maplocation/add',
+                    edit_url: 'cwmap/maplocation/edit',
+                    del_url: 'cwmap/maplocation/del',
+                    table: 'map_location',
                 }
             });
 
@@ -25,75 +23,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
-                        {field: 'user_id', title: __('User_id')},
-                        {field: 'the_name', title: __('The_name'), operate: 'LIKE'},
-                        // {field: 'gender', title: __('Gender')},
-                        {
-                            field: 'gender',
-                            title: __('Gender'),
-                            table: table,
-                            // custom: {"0": 'success', "1": 'danger'},
-                            searchList: {"0": __('Gender 0'), "1": __('Gender 1')},
-                            formatter: Table.api.formatter.status
-                        },
-                        {field: 'mobile', title: __('Mobile'), operate: 'LIKE'},
-                        {field: 'home_address', title: __('Home_address'), operate: 'LIKE'},
-                        {field: 'management_area', title: __('Management_area'), operate: 'LIKE'},
-                        {field: 'lng', title: __('Lng'), operate: 'LIKE'},
-                        {field: 'lat', title: __('Lat'), operate: 'LIKE'},
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
-                        {field: 'state', title: __('State'), searchList: {"0":__('State 0'),"1":__('State 1'),"2":__('State 2')}, formatter: Table.api.formatter.normal},
-                        // {field: 'user.id', title: __('User.id')},
-                        {field: 'user.nickname', title: __('User.nickname'), operate: 'LIKE'},
-                        // {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
-                        //操作栏,默认有编辑、删除或排序按钮,可自定义配置buttons来扩展按钮
-                        {
-                            field: 'operate',
-                            width: "150px",
-                            title: __('Operate'),
-                            table: table,
-                            events: Table.api.events.operate,
-                            buttons: [
-                              
-                                {
-                                        name:  'click',
-                                        text:  '同意',
-                                        title: '同意',
-                                        url: 'user/user_apply/editState/state/1',
-                                        classname: 'btn btn-xs  btn-success btn-ajax',
-                                        click: function (data,row) {
-                                            Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
-                                        },
-                                        hidden:function(row){
-                                            console.log(row.state);
-                                            if(row.state == "0" ){ 
-                                                return false;
-                                            }
-                                            return true;
-                                        }
-                                },
-                                {
-                                    name:  'click',
-                                    text:  '拒绝',
-                                    title: '拒绝',
-                                    url: 'user/user_apply/editState/state/2',
-                                    classname: 'btn btn-xs  btn-danger btn-ajax',
-                                    click: function (data,row) {
-                                        Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
-                                    },
-                                    hidden:function(row){
-                                        console.log(row.state);
-                                        if(row.state == "0" ){ 
-                                            return false;
-                                        }
-                                        return true;
-                                    }
-                            },
-                            ],
-                            formatter: Table.api.formatter.operate
-                        },
+                        {field: 'id', title: __('Id'), visible: false, sortable: false},
+                        {field: 'locationname', title: __('Locationname')},
+                        {field: 'detailaddress', title: __('Detailaddress')},
+                        {field: 'longitude', title: __('Longitude'), visible: false, sortable: false},
+                        {field: 'latitude', title: __('Latitude'), visible: false, sortable: false},
+                        {field: 'phone', title: __('Phone')},
+                        {field: 'email', title: __('Email')},
+                        {field: 'fax', title: __('Fax')},
+                        {field: 'qq', title: __('Qq')},
+                        {field: 'website', title: __('Website')},
+                        {field: 'picture', title: __('Picture'), visible: false, sortable: false, formatter: Table.api.formatter.image},
+                        {field: 'province', title: __('Province')},
+                        {field: 'updatetime', title: __('Updatetime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
             });
@@ -198,11 +141,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             });
         },
-        /* api: {
-            bindevent: function () {
-                Form.api.bindevent($("form[role=form]"));
-            }
-        } */
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));

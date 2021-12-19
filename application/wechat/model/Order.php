@@ -18,7 +18,9 @@ class Order extends Model
     protected $append = [
     ];
 
-
+    protected $type = [
+        'createtime' => 'timestamp:Y-m-d H:i:s',
+    ];
 
     // 生成订单号
     public static function getNewOrderId()

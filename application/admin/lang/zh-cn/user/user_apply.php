@@ -3,7 +3,9 @@
 return [
     'User_id'         => '申请人id',
     'The_name'        => '姓名',
-    'Gender'          => '性别[0:女 1:男]',
+    'Gender'          => '性别',
+    'Gender 0'          => '女',
+    'Gender 1'          => '男',
     'Mobile'          => '手机号',
     'Home_address'    => '家庭住址',
     'Management_area' => '管理区域地址',
@@ -14,7 +16,7 @@ return [
     'State'           => '状态值',
     'State 0'         => '禁用',
     'State 1'         => '正常',
-    'State 2'         => '推荐',
+    'State 2'         => '拒绝',
     'User.id'         => 'ID',
     'User.nickname'   => '昵称'
 ];
